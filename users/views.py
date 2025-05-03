@@ -1,13 +1,30 @@
-from rest_framework import viewsets, filters
+from rest_framework import filters, viewsets
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
+
+from users.models import Payment, User
+from users.serializer import PaymentSerializers, UserSerializer
 
 
-from users.models import Payment
-from users.serializer import PaymentSerializers
+class UserCreateAPIView(CreateAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+
+    def perform_create(self, serializer):
+        user = serializer.save(is_active=True)
+        user.set_password(user.password)
+        user.save()
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializers
     queryset = Payment.objects.all()
     filter_backends = [filters.OrderingFilter]
-    filterset_fields = ['payment_course', 'payment_lesson', 'payment_method']
-    ordering_fields = ['payment_date']
+    filterset_fields = ["payment_course", "payment_lesson", "payment_method"]
+    ordering_fields = ["payment_date"]
+
+    # def perform_create(self, serializer):
+    #     payment = serializer.save()
+    #     payment.user = self.request.user
+    #     payment.save()
