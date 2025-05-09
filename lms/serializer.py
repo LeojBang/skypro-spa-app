@@ -13,12 +13,9 @@ class CourseSerializer(ModelSerializer):
         fields = "__all__"
 
     def get_is_subscribed(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if request and request.user.is_authenticated:
-            return Subscription.objects.filter(
-                user=request.user,
-                course=obj
-            ).exists()
+            return Subscription.objects.filter(user=request.user, course=obj).exists()
         return False
 
 
@@ -27,8 +24,9 @@ class LessonSerializer(ModelSerializer):
         model = Lesson
         fields = "__all__"
         validators = [
-            YouTubeUrlValidator(field='video_url'),
+            YouTubeUrlValidator(field="video_url"),
         ]
+
 
 class CourseDetailSerializer(ModelSerializer):
     lesson_count = SerializerMethodField()
@@ -40,4 +38,3 @@ class CourseDetailSerializer(ModelSerializer):
     class Meta:
         model = Course
         fields = ("name", "preview", "description", "lesson_count", "lessons")
-
