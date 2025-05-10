@@ -4,6 +4,8 @@
 ![Django](https://img.shields.io/badge/django-4.2-brightgreen.svg)
 ![DRF](https://img.shields.io/badge/drf-3.14-red.svg)
 ![Stripe](https://img.shields.io/badge/stripe-integration-635bff.svg)
+![Celery](https://img.shields.io/badge/celery-5.3-green)
+
 
 Backend API для платформы онлайн-обучения с интеграцией платежей через Stripe.
 
@@ -14,6 +16,9 @@ Backend API для платформы онлайн-обучения с инте�
 - **💰 Платежная система** через Stripe
 - **🔔 Подписки** на курсы
 - **📊 Админ-панель** для управления контентом
+- **📧 Асинхронная рассылка уведомлений**
+- **🔒 Автоматическая блокировка неактивных пользователей**
+- **⏰ Периодические задачи с Celery Beat**
 
 ## 🚀 Быстрый старт
 
@@ -21,6 +26,7 @@ Backend API для платформы онлайн-обучения с инте�
 - Python 3.9+
 - PostgreSQL
 - Stripe аккаунт
+- Celery + Redis
 
 ### Установка
 
@@ -48,12 +54,26 @@ Backend API для платформы онлайн-обучения с инте�
 ```
 SECRET_KEY=ваш-secret-key
 DEBUG=True
+
 DB_NAME=learning_db
 DB_USER=db_user
 DB_PASSWORD=db_password
 DB_HOST=localhost
 DB_PORT=5432
+
 STRIPE_API_KEY=ваш-stripe-secret-key
+
+EMAIL_HOST=smtp.yandex.ru
+EMAIL_PORT=465
+EMAIL_HOST_USER=ваш-email@yandex.ru
+EMAIL_HOST_PASSWORD=ваш-пароль
+EMAIL_USE_SSL=True
+
+CELERY_BROKER_URL=redis://localhost:6379/0
+CELERY_RESULT_BACKEND=redis://localhost:6379/0
+
+CACHE_ENABLED=True
+REDIS_URL=redis://127.0.0.1:6379
 ```
 5. Примените миграции:
 ```bash
@@ -71,7 +91,15 @@ STRIPE_API_KEY=ваш-stripe-secret-key
 ```bash
   python manage.py runserver
 ```
-
+8. Запуск Celery
+```bash
+# Worker
+  celery -A config worker --loglevel=info
+```
+```bash
+# Beat
+celery -A config beat --loglevel=info
+```
 ## 🌐 API Endpoints
 ### Аутентификация (users/)
 ```

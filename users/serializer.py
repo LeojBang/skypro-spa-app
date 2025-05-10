@@ -11,10 +11,9 @@ class PaymentSerializers(serializers.ModelSerializer):
         model = Payment
         fields = "__all__"
         extra_kwargs = {
-            'user': {'read_only': True},  # Делаем поле только для чтения
-            'price': {'read_only': True},  # Цена будет вычисляться автоматически
-            'payment_course': {'required': False}  # Так как берем из URL
-
+            "user": {"read_only": True},  # Делаем поле только для чтения
+            "price": {"read_only": True},  # Цена будет вычисляться автоматически
+            "payment_course": {"required": False},  # Так как берем из URL
         }
 
 
