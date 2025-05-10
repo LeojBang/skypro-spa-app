@@ -1,8 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from lms.models import Course, Lesson
+from lms.models import Course, Lesson, Subscription
 from lms.validators import YouTubeUrlValidator
-from lms.models import Subscription
 
 
 class CourseSerializer(ModelSerializer):

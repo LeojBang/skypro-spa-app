@@ -5,7 +5,8 @@ from rest_framework.permissions import AllowAny
 from lms.models import Course
 from users.models import Payment, User
 from users.serializer import PaymentSerializers, UserSerializer
-from users.services import create_stripe_product, create_stripe_price, create_stripe_session
+from users.services import (create_stripe_price, create_stripe_product,
+                            create_stripe_session)
 
 
 class UserCreateAPIView(CreateAPIView):
@@ -19,14 +20,13 @@ class UserCreateAPIView(CreateAPIView):
         user.save()
 
 
-
 class PaymentCreateAPIView(CreateAPIView):
     serializer_class = PaymentSerializers
     queryset = Payment.objects.all()
     permission_classes = (AllowAny,)
 
     def perform_create(self, serializer):
-        course_id = self.kwargs.get('course_id')
+        course_id = self.kwargs.get("course_id")
         course = Course.objects.get(id=course_id)
 
         course_name = course.name
@@ -41,6 +41,6 @@ class PaymentCreateAPIView(CreateAPIView):
             payment_course=course,
             price=course_price,
             session_id=session_id,
-            link=payment_link
+            link=payment_link,
         )
         payment.save()
